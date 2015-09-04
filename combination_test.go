@@ -43,7 +43,7 @@ func TestCombinationSize(t *testing.T) {
 
 func countResults(c Combination, i int) int {
 	var count int
-	for range c.Results(i) {
+	for _ = range c.Results(i) {
 		count++
 	}
 	return count
