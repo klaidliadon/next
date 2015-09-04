@@ -2,19 +2,6 @@ package next
 
 import "sync"
 
-// An element of the combination
-type element struct {
-	prev         *element
-	depth, index int
-}
-
-func (e *element) list() []int {
-	if e.prev == nil {
-		return []int{e.index}
-	}
-	return append(e.prev.list(), e.index)
-}
-
 // The combination struct.
 type Combination struct {
 	Base []interface{}
@@ -23,7 +10,9 @@ type Combination struct {
 // Returns a channel of possible combinations of l elements.
 func (c *Combination) Results(l int) <-chan []interface{} {
 	wg, ch, bs := new(sync.WaitGroup), make(chan []interface{}), len(c.Base)
-	defer func() { go func() { wg.Wait(); close(ch) }() }()
+	defer func() {
+		go func() { wg.Wait(); close(ch) }()
+	}()
 	if l < 1 || l > bs {
 		return ch
 	}
@@ -66,19 +55,9 @@ func (c *Combination) thread(wg *sync.WaitGroup, ch chan []interface{}, l, s int
 		}
 		e = &element{index: i + 1, depth: e.depth + 1, prev: e}
 		if e.depth+1 == l {
-			ch <- c.value(e)
+			ch <- e.value(c.Base)
 			i = e.index - 1
 			e = e.prev
 		}
 	}
-}
-
-// Returns the actual combination using an element
-func (c *Combination) value(e *element) []interface{} {
-	idxlist := e.list()
-	result := make([]interface{}, len(idxlist))
-	for i := 0; i < e.depth+1; i++ {
-		result[e.depth-i] = c.Base[idxlist[i]]
-	}
-	return result
 }
