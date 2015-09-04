@@ -23,3 +23,7 @@ func (e *element) value(base []interface{}) []interface{} {
 	}
 	return result
 }
+
+func (e *element) join(i int) *element {
+	return &element{index: i + 1, depth: e.depth + 1, prev: e}
+}
