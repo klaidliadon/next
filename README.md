@@ -1,8 +1,10 @@
-#Next
-The package calculates asynchronusly combinations and permutations of a series of value.
+#Next [![Build Status](https://travis-ci.org/klaidliadon/next.svg?branch=master)](https://travis-ci.org/klaidliadon/next) [![GoDoc](http://godoc.org/github.com/klaidliadon/next?status.png)](http://godoc.org/github.com/klaidliadon/next) 
+==============================
+
+The package calculates asynchronously combinations and permutations of a collection of values.
 
 ##Usage
-Just use `next.NewCombination()` to get a channel of results.
+Just use create a new `Combination{...}` and get channel of results.
 
 	package main
 	

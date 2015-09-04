@@ -15,12 +15,12 @@ func (e *element) list() []int {
 	return append(e.prev.list(), e.index)
 }
 
-// The combination struct
+// The combination struct.
 type Combination struct {
 	Base []interface{}
 }
 
-// Returns a channel of possible combinations
+// Returns a channel of possible combinations of l elements.
 func (c *Combination) Results(l int) <-chan []interface{} {
 	wg, ch, bs := new(sync.WaitGroup), make(chan []interface{}), len(c.Base)
 	defer func() { go func() { wg.Wait(); close(ch) }() }()
