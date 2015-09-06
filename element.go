@@ -16,10 +16,9 @@ func (e *element) list() []int {
 
 // Returns the actual combination using an element
 func (e *element) value(base []interface{}) []interface{} {
-	idxlist := e.list()
-	result := make([]interface{}, len(idxlist))
-	for i := 0; i <= e.depth; i++ {
-		result[e.depth-i] = base[idxlist[i]]
+	var result = make([]interface{}, 0, e.depth+1)
+	for _, v := range e.list() {
+		result = append(result, base[v])
 	}
 	return result
 }
