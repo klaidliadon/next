@@ -26,5 +26,5 @@ The goal is to cover the 4 main cases of combinatronics:
 
 - [x] Combinations
 - [ ] Combinations with repetitions
-- [ ] Permutations
+- [x] Permutations
 - [ ] Permutations with repetitions
