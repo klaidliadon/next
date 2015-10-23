@@ -1,5 +1,4 @@
 #Next [![Build Status](https://travis-ci.org/klaidliadon/next.svg?branch=master)](https://travis-ci.org/klaidliadon/next) [![GoDoc](http://godoc.org/github.com/klaidliadon/next?status.png)](http://godoc.org/github.com/klaidliadon/next) [![codecov.io](http://codecov.io/github/klaidliadon/next/coverage.svg?branch=master)](http://codecov.io/github/klaidliadon/next?branch=master)
-==============================
 
 The package calculates asynchronously combinations and permutations of a collection of values.
 
