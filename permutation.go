@@ -12,7 +12,8 @@ func (p *Permutation) Results(r int) <-chan []interface{} {
 
 func (p *Permutation) results(r int, ch chan<- []interface{}) {
 	defer close(ch)
-	n := len(*p)
+	src := *p
+	n := len(src)
 	if r > n {
 		return
 	}
@@ -25,10 +26,12 @@ func (p *Permutation) results(r int, ch chan<- []interface{}) {
 		cycles[i] = n - i
 	}
 	cmb := make([]interface{}, r)
+	res := make([]interface{}, r)
 	for i, el := range idxs[:r] {
-		cmb[i] = (*p)[el]
+		cmb[i] = (src)[el]
 	}
-	ch <- cmb
+	copy(res, cmb)
+	ch <- res
 	for n > 0 {
 		i := r - 1
 		for ; i >= 0; i -= 1 {
@@ -44,9 +47,11 @@ func (p *Permutation) results(r int, ch chan<- []interface{}) {
 				j := cycles[i]
 				idxs[i], idxs[n-j] = idxs[n-j], idxs[i]
 				for k := i; k < r; k += 1 {
-					cmb[k] = (*p)[idxs[k]]
+					cmb[k] = src[idxs[k]]
 				}
-				ch <- cmb
+				res := make([]interface{}, r)
+				copy(res, cmb)
+				ch <- res
 				break
 			}
 		}

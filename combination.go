@@ -12,7 +12,8 @@ func (c *Combination) Results(r int) <-chan []interface{} {
 
 func (c *Combination) results(r int, ch chan<- []interface{}) {
 	defer close(ch)
-	n := len(*c)
+	src := *c
+	n := len(src)
 	if r > n {
 		return
 	}
@@ -21,25 +22,29 @@ func (c *Combination) results(r int, ch chan<- []interface{}) {
 		idxs[i] = i
 	}
 	cmb := make([]interface{}, r)
+	res := make([]interface{}, r)
 	for i, el := range idxs {
-		cmb[i] = (*c)[el]
+		cmb[i] = src[el]
 	}
-	ch <- cmb
+	copy(res, cmb)
+	ch <- res
 	for {
 		i := r - 1
-		for i >= 0 && idxs[i] == i+n-r {
-			i -= 1
+		for ; i >= 0 && idxs[i] == i+n-r; i -= 1 {
+
 		}
 		if i < 0 {
-			break
+			return
 		}
 		idxs[i] += 1
 		for j := i + 1; j < r; j += 1 {
 			idxs[j] = idxs[j-1] + 1
 		}
 		for ; i < len(idxs); i += 1 {
-			cmb[i] = (*c)[idxs[i]]
+			cmb[i] = src[idxs[i]]
 		}
-		ch <- cmb
+		res := make([]interface{}, r)
+		copy(res, cmb)
+		ch <- res
 	}
 }
