@@ -2,70 +2,60 @@ package next
 
 import "testing"
 
-func combSize(n, r int) int {
-	if r > n {
-		return 0
+type testbase bool
+
+func (t testbase) of(int) <-chan []interface{} { return nil }
+
+func newCases(n int) []base {
+	b := make([]interface{}, n)
+	for i := range b {
+		b[i] = string('a' + i)
 	}
-	var t = 1
-	for i := 1; i <= r; i++ {
-		t = t * (n - r + i) / i
+	return []base{
+		combination(b[:]),
+		permutation(b[:]),
 	}
-	return t
 }
 
-// n!/(n-r)!
-func permSize(n, r int) int {
-	if r > n {
-		return 0
+func TestUnknown(t *testing.T) {
+	if c := count(testbase(false), 2); c != 0 {
+		t.Fail()
 	}
-	var t = 1
-	for i := n - r + 1; i <= n; i++ {
-		t = t * i
-	}
-	return t
 }
 
-func newComb(a ...interface{}) result {
-	c := Combination(a)
-	return &c
-}
-
-func newPerm(a ...interface{}) result {
-	c := Permutation(a)
-	return &c
-}
-
-type result interface {
-	Results(int) <-chan []interface{}
-}
-type TestCase struct {
-	New  func(...interface{}) result
-	Size func(int, int) int
-}
-
-func Test(t *testing.T) {
-	var base = []interface{}{
-		"a", "b", "c", "d", "e",
-		"f", "g", "h", "i", "j",
-	}
-	size := len(base)
-	var cases = []TestCase{
-		TestCase{newComb, combSize},
-		TestCase{newPerm, permSize},
-	}
-	for _, tc := range cases {
-		c := tc.New(base...)
+func TestSizes(t *testing.T) {
+	size := 7
+	cases := newCases(size)
+	for _, c := range cases {
 		for i := 0; i < size+2; i++ {
 			var tot int
-			ch := c.Results(i)
+			ch := c.of(i)
 			for _ = range ch {
 				tot++
 			}
-			if expected := tc.Size(size, i); tot != expected {
-				t.Errorf("(%2d %2d) = %d (expected %d)", size, i, tot, expected)
+			if expected := count(c, i); tot != expected {
+				t.Errorf("%T (%2d %2d) = %d (expected %d)", c, size, i, tot, expected)
 			} else {
-				t.Logf("(%2d %2d) = %d", size, i, tot)
+				t.Logf("%T (%2d %2d) = %d", c, size, i, tot)
 			}
 		}
+	}
+}
+
+func TestCreation(t *testing.T) {
+	base := []interface{}{1, 2, 3}
+	Combination(base, 2)
+	Permutation(base, 2)
+}
+
+func TestShowcase(t *testing.T) {
+	size := 5
+	cases := newCases(size)
+	for _, c := range cases {
+		var r = make([][]interface{}, 0, count(c, size))
+		for v := range c.of(3) {
+			r = append(r, v)
+		}
+		t.Logf("Result for %T: %v", c, r)
 	}
 }

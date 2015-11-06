@@ -1,19 +1,26 @@
 package next
 
+// Returns a channel of permutations of n element from base w/o repetition
+func Permutation(base []interface{}, n int) <-chan []interface{} {
+	if n < 0 {
+		n = 0
+	}
+	return permutation(base).of(n)
+}
+
 // A combination of elements.
-type Permutation []interface{}
+type permutation []interface{}
 
 // Returns a channel of possible combinations of l elements.
-func (p *Permutation) Results(r int) <-chan []interface{} {
+func (p permutation) of(r int) <-chan []interface{} {
 	res := make(chan []interface{})
 	go p.results(r, res)
 	return res
 }
 
-func (p *Permutation) results(r int, ch chan<- []interface{}) {
+func (p permutation) results(r int, ch chan<- []interface{}) {
 	defer close(ch)
-	src := *p
-	n := len(src)
+	n := len(p)
 	if r > n {
 		return
 	}
@@ -28,7 +35,7 @@ func (p *Permutation) results(r int, ch chan<- []interface{}) {
 	cmb := make([]interface{}, r)
 	res := make([]interface{}, r)
 	for i, el := range idxs[:r] {
-		cmb[i] = (src)[el]
+		cmb[i] = p[el]
 	}
 	copy(res, cmb)
 	ch <- res
@@ -47,7 +54,7 @@ func (p *Permutation) results(r int, ch chan<- []interface{}) {
 				j := cycles[i]
 				idxs[i], idxs[n-j] = idxs[n-j], idxs[i]
 				for k := i; k < r; k += 1 {
-					cmb[k] = src[idxs[k]]
+					cmb[k] = p[idxs[k]]
 				}
 				res := make([]interface{}, r)
 				copy(res, cmb)

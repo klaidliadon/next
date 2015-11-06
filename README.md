@@ -1,9 +1,17 @@
-#Next [![Build Status](https://travis-ci.org/klaidliadon/next.svg?branch=master)](https://travis-ci.org/klaidliadon/next) [![GoDoc](http://godoc.org/github.com/klaidliadon/next?status.svg)](http://godoc.org/github.com/klaidliadon/next) [![codecov.io](http://codecov.io/github/klaidliadon/next/coverage.svg?branch=master)](http://codecov.io/github/klaidliadon/next?branch=master)
+# Next [![Build Status](https://travis-ci.org/klaidliadon/next.svg?branch=master)](https://travis-ci.org/klaidliadon/next) [![GoDoc](http://godoc.org/github.com/klaidliadon/next?status.svg)](http://godoc.org/github.com/klaidliadon/next) [![codecov.io](http://codecov.io/github/klaidliadon/next/coverage.svg?branch=master)](http://codecov.io/github/klaidliadon/next?branch=master)
 
 The package calculates asynchronously combinations and permutations of a collection of values.
 
-##Usage
-Just use create a new `Combination{...}` and get channel of results.
+## Functionalities
+
+- Combinations
+- Combinations with repetitions
+- Permutations
+- Permutations with repetitions
+
+## Usage
+
+Just use create a new channel using `Combination()` or `Permutation()` and receive the results.
 
 	package main
 	
@@ -13,17 +21,28 @@ Just use create a new `Combination{...}` and get channel of results.
 	)
 	
 	func main() {
-		c := next.Combination{Base: []interface{}{
-			"a", "b", "c",
-		}}
-		for v := range c.Results(2) {
+		for v := range next.Combination([]interface{1,2,3,4}, 2, true) {
 			fmt.Println(v)
 		}
 	}
 
-##Roadmap
-The goal is to cover the 4 main cases of combinatronics:
+Produces
 
+	[1 1]
+	[1 2]
+	[1 3]
+	[1 4]
+	[2 2]
+	[2 3]
+	[2 4]
+	[3 3]
+	[3 4]
+	[4 4]
+
+##Roadmap
+
+The goal is to cover the 4 main cases of combinatronics:
+ 
 - [x] Combinations
 - [ ] Combinations with repetitions
 - [x] Permutations

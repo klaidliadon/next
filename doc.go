@@ -1,4 +1,19 @@
 /*
-	The package calculates asynchronously combinations and permutations of a collection of values.
+	Package next calculates asynchronously combinations and permutations of a collection of values.
+
+	Here is a sample usage of next:
+
+		package main
+
+		import (
+			"fmt"
+			"github.com/klaidliadon/next"
+		)
+
+		func main() {
+			for v := range next.Combination([]interface{1,2,3,4}, 2, true) {
+				fmt.Println(v)
+			}
+		}
 */
 package next
