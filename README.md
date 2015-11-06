@@ -1,6 +1,13 @@
-# Next [![Build Status](https://travis-ci.org/klaidliadon/next.svg?branch=master)](https://travis-ci.org/klaidliadon/next) [![GoDoc](http://godoc.org/github.com/klaidliadon/next?status.svg)](http://godoc.org/github.com/klaidliadon/next) [![codecov.io](http://codecov.io/github/klaidliadon/next/coverage.svg?branch=master)](http://codecov.io/github/klaidliadon/next?branch=master)
+# Next
+[![GoDoc](https://godoc.org/gopkg.in/klaidliadon/next.v1?status.svg)](https://godoc.org/gopkg.in/klaidliadon/next.v1)
+[![Build Status](https://travis-ci.org/klaidliadon/next.svg?branch=master)](https://travis-ci.org/klaidliadon/next) 
+[![codecov.io](http://codecov.io/github/klaidliadon/next/coverage.svg?branch=master)](http://codecov.io/github/klaidliadon/next?branch=master)
 
 The package calculates asynchronously combinations and permutations of a collection of values.
+
+To add the package recommended:
+
+	go get gopkg.in/klaidliadon/next.v1
 
 ## Functionalities
 
