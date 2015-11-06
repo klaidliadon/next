@@ -1,11 +1,15 @@
 package next
 
 // Returns a channel of permutations of n element from base w/o repetition
-func Permutation(base []interface{}, n int) <-chan []interface{} {
+func Permutation(base []interface{}, n int, repeat bool) <-chan []interface{} {
 	if n < 0 {
 		n = 0
 	}
-	return permutation(base).of(n)
+	if repeat {
+		return repeatPermutation(base).of(n)
+	} else {
+		return permutation(base).of(n)
+	}
 }
 
 // A combination of elements.
@@ -66,5 +70,30 @@ func (p permutation) results(r int, ch chan<- []interface{}) {
 			return
 		}
 
+	}
+}
+
+// A combination of elements.
+type repeatPermutation []interface{}
+
+// Returns a channel of possible combinations of l elements.
+func (p repeatPermutation) of(r int) <-chan []interface{} {
+	res := make(chan []interface{})
+	go p.results(r, res)
+	return res
+}
+
+func (p repeatPermutation) results(r int, ch chan<- []interface{}) {
+	defer close(ch)
+	n, t := len(p), count(p, r)
+	for i := 0; i < t; i++ {
+		v := make([]interface{}, r)
+		j := i
+		for k := 0; k < r; k++ {
+			x := j % n
+			j = int(j / n)
+			v[k] = p[x]
+		}
+		ch <- v
 	}
 }

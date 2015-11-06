@@ -14,6 +14,8 @@ func newCases(n int) []base {
 	return []base{
 		combination(b[:]),
 		permutation(b[:]),
+		repeatCombination(b[:]),
+		repeatPermutation(b[:]),
 	}
 }
 
@@ -44,8 +46,10 @@ func TestSizes(t *testing.T) {
 
 func TestCreation(t *testing.T) {
 	base := []interface{}{1, 2, 3}
-	Combination(base, 2)
-	Permutation(base, 2)
+	Combination(base, 2, false)
+	Combination(base, -1, true)
+	Permutation(base, 2, false)
+	Permutation(base, -1, true)
 }
 
 func TestShowcase(t *testing.T) {

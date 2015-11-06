@@ -1,5 +1,7 @@
 package next
 
+import "math"
+
 type base interface {
 	of(int) <-chan []interface{}
 }
@@ -26,6 +28,18 @@ func count(b base, r int) int {
 			t = t * i
 		}
 		return t
+	case repeatCombination:
+		n := len(c)
+		var t = 1
+		for i := r + 1; i < n+r; i++ {
+			t = t * i
+		}
+		for i := 1; i < n; i++ {
+			t = t / i
+		}
+		return t
+	case repeatPermutation:
+		return int(math.Pow(float64(len(c)), float64(r)))
 	}
 	return 0
 }

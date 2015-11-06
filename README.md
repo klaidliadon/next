@@ -41,9 +41,11 @@ Produces
 
 ##Roadmap
 
-The goal is to cover the 4 main cases of combinatronics:
+The 4 main cases of combinatronics are covered:
  
 - [x] Combinations
-- [ ] Combinations with repetitions
+- [x] Combinations with repetitions
 - [x] Permutations
-- [ ] Permutations with repetitions
+- [x] Permutations with repetitions
+
+The future updates will improve performance and memory usage.
