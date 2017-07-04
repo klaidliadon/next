@@ -28,7 +28,7 @@ Just use create a new channel using `Combination()` or `Permutation()` and recei
 	)
 	
 	func main() {
-		for v := range next.Combination([]interface{1,2,3,4}, 2, true) {
+		for v := range next.Combination([]interface{}{1,2,3,4}, 2, true) {
 			fmt.Println(v)
 		}
 	}
