@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/klaidliadon/next"
+	"klaidliadon.dev/next"
 )
 
 func main() {
