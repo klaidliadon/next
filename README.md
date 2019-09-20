@@ -24,7 +24,7 @@ Just use create a new channel using `Combination()` or `Permutation()` and recei
 	
 	import (
 		"fmt"
-		"github.com/klaidliadon/next"
+		"klaidliadon.dev/next"
 	)
 	
 	func main() {
