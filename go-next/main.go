@@ -17,10 +17,8 @@ func main() {
 	flag.BoolVar(&r, "repeat", false, "repeatition")
 	flag.UintVar(&s, "size", 0, "size of each result (not 0)")
 	flag.Parse()
-	var args []interface{}
-	for _, v := range flag.Args() {
-		args = append(args, v)
-	}
+	args := flag.Args()
+	
 	if s == 0 {
 		flag.Usage()
 		os.Exit(1)
@@ -29,7 +27,7 @@ func main() {
 		fmt.Printf("%s: please specify at least an element.\n", os.Args[0])
 		os.Exit(1)
 	}
-	var ch <-chan []interface{}
+	var ch <-chan []string
 	if o {
 		ch = next.Permutation(args, int(s), r)
 	} else {

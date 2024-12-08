@@ -1,32 +1,32 @@
 package next
 
 // Returns a channel of combinantions of n element from base w/o repetition
-func Combination(base []interface{}, n int, repeat bool) <-chan []interface{} {
+func Combination[T any](base []T, n int, repeat bool) <-chan []T {
 	if n < 0 {
 		n = 0
 	}
 	if repeat {
-		return repeatCombination(base).of(n)
+		return repeatCombination[T](base).of(n)
 	} else {
-		return combination(base).of(n)
+		return combination[T](base).of(n)
 	}
 }
 
 // A collection of elements for calculating combinations.
-type combination []interface{}
+type combination[T any] []T
 
 // Returns a channel of possible combinations of r elements.
-func (c combination) of(r int) <-chan []interface{} {
-	res := make(chan []interface{})
+func (c combination[T]) of(r int) <-chan []T {
+	res := make(chan []T)
 	go c.results(r, res)
 	return res
 }
 
 // Calculates the results and send them back to the channel.
-func (c combination) results(r int, ch chan<- []interface{}) {
+func (c combination[T]) results(r int, ch chan<- []T) {
 	defer close(ch)
-	base := []interface{}(c)
-	n, t := len(c), count(c, r)
+	base := c
+	n, t := len(c), count[T](c, r)
 	if t == 0 {
 		return
 	}
@@ -54,19 +54,19 @@ func (c combination) results(r int, ch chan<- []interface{}) {
 }
 
 // A collection of elements for calculating combinations.
-type repeatCombination []interface{}
+type repeatCombination[T any] []T
 
-func (c repeatCombination) of(r int) <-chan []interface{} {
-	res := make(chan []interface{})
+func (c repeatCombination[T]) of(r int) <-chan []T {
+	res := make(chan []T)
 	go c.results(r, res)
 	return res
 }
 
 // Calculates the results and send them back to the channel.
-func (c repeatCombination) results(r int, ch chan<- []interface{}) {
+func (c repeatCombination[T]) results(r int, ch chan<- []T) {
 	defer close(ch)
-	base := []interface{}(c)
-	n, t := len(c), count(c, r)
+	base := []T(c)
+	n, t := len(c), count[T](c, r)
 	idxs := make([]int, r)
 	sendIndex(base, idxs, ch)
 	for i, j := 1, r-1; i < t; i++ {

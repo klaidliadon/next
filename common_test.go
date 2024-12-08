@@ -1,26 +1,29 @@
 package next
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 type testbase bool
 
-func (t testbase) of(int) <-chan []interface{} { return nil }
+func (t testbase) of(int) <-chan []testbase { return nil }
 
-func newCases(n int) []base {
-	b := make([]interface{}, n)
+func newCases(n int) []base[string] {
+	b := make([]string, n)
 	for i := range b {
-		b[i] = string('a' + i)
+		b[i] = fmt.Sprintf("a%d", i)
 	}
-	return []base{
-		combination(b[:]),
-		permutation(b[:]),
-		repeatCombination(b[:]),
-		repeatPermutation(b[:]),
+	return []base[string]{
+		combination[string](b[:]),
+		permutation[string](b[:]),
+		repeatCombination[string](b[:]),
+		repeatPermutation[string](b[:]),
 	}
 }
 
 func TestUnknown(t *testing.T) {
-	if c := count(testbase(false), 2); c != 0 {
+	if c := count[testbase](testbase(false), 2); c != 0 {
 		t.Fail()
 	}
 }
@@ -45,7 +48,7 @@ func TestSizes(t *testing.T) {
 }
 
 func TestCreation(t *testing.T) {
-	base := []interface{}{1, 2, 3}
+	base := []int{1, 2, 3}
 	Combination(base, 2, false)
 	Combination(base, -1, true)
 	Permutation(base, 2, false)
@@ -56,7 +59,7 @@ func TestShowcase(t *testing.T) {
 	size := 5
 	cases := newCases(size)
 	for _, c := range cases {
-		var r = make([][]interface{}, 0, count(c, size))
+		var r = make([][]string, 0, count(c, size))
 		for v := range c.of(3) {
 			r = append(r, v)
 		}
