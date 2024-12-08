@@ -85,7 +85,7 @@ func (p repeatPermutation[T]) of(r int) <-chan []T {
 
 func (p repeatPermutation[T]) results(r int, ch chan<- []T) {
 	defer close(ch)
-	n, t := len(p), count[T](p, r)
+	n, t := len(p), count(p, r)
 	for i := 0; i < t; i++ {
 		v := make([]T, r)
 		j := i

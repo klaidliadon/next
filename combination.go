@@ -26,7 +26,7 @@ func (c combination[T]) of(r int) <-chan []T {
 func (c combination[T]) results(r int, ch chan<- []T) {
 	defer close(ch)
 	base := c
-	n, t := len(c), count[T](c, r)
+	n, t := len(c), count(c, r)
 	if t == 0 {
 		return
 	}
@@ -66,7 +66,7 @@ func (c repeatCombination[T]) of(r int) <-chan []T {
 func (c repeatCombination[T]) results(r int, ch chan<- []T) {
 	defer close(ch)
 	base := []T(c)
-	n, t := len(c), count[T](c, r)
+	n, t := len(c), count(c, r)
 	idxs := make([]int, r)
 	sendIndex(base, idxs, ch)
 	for i, j := 1, r-1; i < t; i++ {

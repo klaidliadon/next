@@ -23,7 +23,7 @@ func newCases(n int) []base[string] {
 }
 
 func TestUnknown(t *testing.T) {
-	if c := count[testbase](testbase(false), 2); c != 0 {
+	if c := count(testbase(false), 2); c != 0 {
 		t.Fail()
 	}
 }
