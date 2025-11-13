@@ -2,13 +2,13 @@ package next
 
 import "math"
 
-type base interface {
-	of(int) <-chan []interface{}
+type base[T any] interface {
+	of(int) <-chan []T
 }
 
-func count(b base, r int) int {
+func count[T any](b base[T], r int) int {
 	switch c := b.(type) {
-	case combination:
+	case combination[T]:
 		n := len(c)
 		if r > n {
 			return 0
@@ -18,7 +18,7 @@ func count(b base, r int) int {
 			t = t * (n - r + i) / i
 		}
 		return t
-	case permutation:
+	case permutation[T]:
 		n := len(c)
 		if r > n {
 			return 0
@@ -28,7 +28,7 @@ func count(b base, r int) int {
 			t = t * i
 		}
 		return t
-	case repeatCombination:
+	case repeatCombination[T]:
 		n := len(c)
 		var t = 1
 		for i := r + 1; i < n+r; i++ {
@@ -38,16 +38,16 @@ func count(b base, r int) int {
 			t = t / i
 		}
 		return t
-	case repeatPermutation:
+	case repeatPermutation[T]:
 		return int(math.Pow(float64(len(c)), float64(r)))
 	}
 	return 0
 }
 
 // Creates a new result using the selected indexes and sends them to the channel
-func sendIndex(base []interface{}, index []int, ch chan<- []interface{}) {
+func sendIndex[T any](base []T, index []int, ch chan<- []T) {
 	r := len(index)
-	res := make([]interface{}, r)
+	res := make([]T, r)
 	for i, idx := range index {
 		res[i] = base[idx]
 	}

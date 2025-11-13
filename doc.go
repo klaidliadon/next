@@ -11,7 +11,7 @@
 		)
 
 		func main() {
-			for v := range next.Combination([]interface{1,2,3,4}, 2, true) {
+			for v := range next.Combination([]int{1,2,3,4}, 2, true) {
 				fmt.Println(v)
 			}
 		}

@@ -1,28 +1,28 @@
 package next
 
 // Returns a channel of permutations of n element from base w/o repetition
-func Permutation(base []interface{}, n int, repeat bool) <-chan []interface{} {
+func Permutation[T any](base []T, n int, repeat bool) <-chan []T {
 	if n < 0 {
 		n = 0
 	}
 	if repeat {
-		return repeatPermutation(base).of(n)
+		return repeatPermutation[T](base).of(n)
 	} else {
-		return permutation(base).of(n)
+		return permutation[T](base).of(n)
 	}
 }
 
 // A combination of elements.
-type permutation []interface{}
+type permutation[T any] []T
 
 // Returns a channel of possible combinations of l elements.
-func (p permutation) of(r int) <-chan []interface{} {
-	res := make(chan []interface{})
+func (p permutation[T]) of(r int) <-chan []T {
+	res := make(chan []T)
 	go p.results(r, res)
 	return res
 }
 
-func (p permutation) results(r int, ch chan<- []interface{}) {
+func (p permutation[T]) results(r int, ch chan<- []T) {
 	defer close(ch)
 	n := len(p)
 	if r > n {
@@ -36,8 +36,8 @@ func (p permutation) results(r int, ch chan<- []interface{}) {
 	for i := range cycles {
 		cycles[i] = n - i
 	}
-	cmb := make([]interface{}, r)
-	res := make([]interface{}, r)
+	cmb := make([]T, r)
+	res := make([]T, r)
 	for i, el := range idxs[:r] {
 		cmb[i] = p[el]
 	}
@@ -60,7 +60,7 @@ func (p permutation) results(r int, ch chan<- []interface{}) {
 				for k := i; k < r; k += 1 {
 					cmb[k] = p[idxs[k]]
 				}
-				res := make([]interface{}, r)
+				res := make([]T, r)
 				copy(res, cmb)
 				ch <- res
 				break
@@ -74,20 +74,20 @@ func (p permutation) results(r int, ch chan<- []interface{}) {
 }
 
 // A combination of elements.
-type repeatPermutation []interface{}
+type repeatPermutation[T any] []T
 
 // Returns a channel of possible combinations of l elements.
-func (p repeatPermutation) of(r int) <-chan []interface{} {
-	res := make(chan []interface{})
+func (p repeatPermutation[T]) of(r int) <-chan []T {
+	res := make(chan []T)
 	go p.results(r, res)
 	return res
 }
 
-func (p repeatPermutation) results(r int, ch chan<- []interface{}) {
+func (p repeatPermutation[T]) results(r int, ch chan<- []T) {
 	defer close(ch)
 	n, t := len(p), count(p, r)
 	for i := 0; i < t; i++ {
-		v := make([]interface{}, r)
+		v := make([]T, r)
 		j := i
 		for k := 0; k < r; k++ {
 			x := j % n
