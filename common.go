@@ -3,7 +3,7 @@ package next
 import "math"
 
 type base[T any] interface {
-	of(int) <-chan []T
+	Of(int) func(yield func([]T) bool)
 }
 
 func count[T any](b base[T], r int) int {
@@ -44,12 +44,12 @@ func count[T any](b base[T], r int) int {
 	return 0
 }
 
-// Creates a new result using the selected indexes and sends them to the channel
-func sendIndex[T any](base []T, index []int, ch chan<- []T) {
+// getResult creates a new result using the selected indexes
+func getResult[T any](base []T, index []int) []T {
 	r := len(index)
 	res := make([]T, r)
 	for i, idx := range index {
 		res[i] = base[idx]
 	}
-	ch <- res
+	return res
 }

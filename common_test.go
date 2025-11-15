@@ -7,7 +7,9 @@ import (
 
 type testbase bool
 
-func (t testbase) of(int) <-chan []testbase { return nil }
+func (t testbase) Of(int) func(yield func([]bool) bool) {
+	return func(yield func([]bool) bool) {}
+}
 
 func newCases(n int) []base[string] {
 	b := make([]string, n)
@@ -34,8 +36,8 @@ func TestSizes(t *testing.T) {
 	for _, c := range cases {
 		for i := 0; i < size+2; i++ {
 			var tot int
-			ch := c.of(i)
-			for _ = range ch {
+			ch := c.Of(i)
+			for range ch {
 				tot++
 			}
 			if expected := count(c, i); tot != expected {
@@ -60,7 +62,7 @@ func TestShowcase(t *testing.T) {
 	cases := newCases(size)
 	for _, c := range cases {
 		var r = make([][]string, 0, count(c, size))
-		for v := range c.of(3) {
+		for v := range c.Of(3) {
 			r = append(r, v)
 		}
 		t.Logf("Result for %T: %v", c, r)

@@ -18,7 +18,7 @@ func main() {
 	flag.UintVar(&s, "size", 0, "size of each result (not 0)")
 	flag.Parse()
 	args := flag.Args()
-	
+
 	if s == 0 {
 		flag.Usage()
 		os.Exit(1)
@@ -27,7 +27,7 @@ func main() {
 		fmt.Printf("%s: please specify at least an element.\n", os.Args[0])
 		os.Exit(1)
 	}
-	var ch <-chan []string
+	var ch func(yield func([]string) bool)
 	if o {
 		ch = next.Permutation(args, int(s), r)
 	} else {
