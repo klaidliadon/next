@@ -1,26 +1,22 @@
 package next
 
-// Returns a channel of permutations of n element from base w/o repetition
-func Permutation[T any](base []T, n int, repeat bool) func(yield func([]T) bool) {
-	if n < 0 {
-		n = 0
-	}
-	if repeat {
-		return repeatPermutation[T](base).Of(n)
-	} else {
-		return permutation[T](base).Of(n)
-	}
-}
+import (
+	"iter"
+	"math"
+)
 
-// A combination of elements.
-type permutation[T any] []T
+// Permutation returns an iterator of permutations of n element from base without repetition
+func Permutation[T any](elements []T, r int) iter.Seq[[]T] {
+	if r < 0 {
+		r = 0
+	}
 
-// Returns a channel of possible combinations of l elements.
-func (p permutation[T]) Of(r int) func(yield func([]T) bool) {
-	n := len(p)
+	base := elements
+	n := len(elements)
 	if r > n {
 		return func(yield func([]T) bool) {}
 	}
+
 	return func(yield func([]T) bool) {
 		idxs := make([]int, n)
 		for i := range idxs {
@@ -33,7 +29,7 @@ func (p permutation[T]) Of(r int) func(yield func([]T) bool) {
 		cmb := make([]T, r)
 		res := make([]T, r)
 		for i, el := range idxs[:r] {
-			cmb[i] = p[el]
+			cmb[i] = base[el]
 		}
 		copy(res, cmb)
 		if !yield(res) {
@@ -54,7 +50,7 @@ func (p permutation[T]) Of(r int) func(yield func([]T) bool) {
 					j := cycles[i]
 					idxs[i], idxs[n-j] = idxs[n-j], idxs[i]
 					for k := i; k < r; k += 1 {
-						cmb[k] = p[idxs[k]]
+						cmb[k] = base[idxs[k]]
 					}
 					res := make([]T, r)
 					copy(res, cmb)
@@ -71,24 +67,27 @@ func (p permutation[T]) Of(r int) func(yield func([]T) bool) {
 	}
 }
 
-// A combination of elements.
-type repeatPermutation[T any] []T
+func RepeatPermutation[T any](elements []T, r int) iter.Seq[[]T] {
+	if r < 0 {
+		r = 0
+	}
 
-// Returns a channel of possible combinations of l elements.
-func (p repeatPermutation[T]) Of(r int) func(yield func([]T) bool) {
-	n, t := len(p), count(p, r)
 	return func(yield func([]T) bool) {
-		for i := 0; i < t; i++ {
+		base := elements
+		n := len(elements)
+		t := int(math.Pow(float64(n), float64(r)))
+		for i := range t {
 			v := make([]T, r)
 			j := i
-			for k := 0; k < r; k++ {
+			for k := range r {
 				x := j % n
 				j = int(j / n)
-				v[k] = p[x]
+				v[k] = base[x]
 			}
 			if !yield(v) {
 				return
 			}
 		}
 	}
+
 }

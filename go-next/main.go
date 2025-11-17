@@ -4,36 +4,43 @@ package main
 import (
 	"flag"
 	"fmt"
+	"iter"
 	"os"
 
 	"klaidliadon.dev/next"
 )
 
 func main() {
-	var o bool
-	var r bool
-	var s uint
-	flag.BoolVar(&o, "order", false, "order matters")
-	flag.BoolVar(&r, "repeat", false, "repeatition")
-	flag.UintVar(&s, "size", 0, "size of each result (not 0)")
+	order := flag.Bool("order", false, "order matters")
+	repeat := flag.Bool("repeat", false, "elements can be repeated")
+	size := flag.Int("size", 0, "size of each result (not 0)")
 	flag.Parse()
-	args := flag.Args()
 
-	if s == 0 {
+	if *size == 0 {
 		flag.Usage()
 		os.Exit(1)
 	}
-	if len(args) == 0 {
+
+	base := flag.Args()
+
+	if len(base) == 0 {
 		fmt.Printf("%s: please specify at least an element.\n", os.Args[0])
 		os.Exit(1)
 	}
-	var ch func(yield func([]string) bool)
-	if o {
-		ch = next.Permutation(args, int(s), r)
-	} else {
-		ch = next.Combination(args, int(s), r)
+
+	seq := (func([]string, int) iter.Seq[[]string])(nil)
+	switch {
+	case *repeat && *order:
+		seq = next.RepeatPermutation
+	case *repeat && !*order:
+		seq = next.RepeatCombination
+	case !*repeat && *order:
+		seq = next.Permutation
+	case !*repeat && !*order:
+		seq = next.Combination
 	}
-	for c := range ch {
+
+	for c := range seq(base, *size) {
 		fmt.Println(c)
 	}
 }
